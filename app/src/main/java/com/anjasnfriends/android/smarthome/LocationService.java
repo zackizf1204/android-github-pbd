@@ -39,6 +39,8 @@ public class LocationService extends Service
     private static final float LOCATION_DISTANCE = 10f;
     public static final String DISTANCE_MATRIX = "distance_matrix";
 
+    String home;
+
     private class LocationListener implements android.location.LocationListener{
         TextView NewText;
         Location mLastLocation;
@@ -54,8 +56,6 @@ public class LocationService extends Service
         {
             Log.e(TAG, "onLocationChanged: " + location);
             mLastLocation.set(location);
-            String home = HomeActivity.address;
-            Log.e(TAG, "SEND ALAMAT: " + HomeActivity.address);
             sendBroadcastMessage(location, home);
         }
         @Override
@@ -83,11 +83,15 @@ public class LocationService extends Service
     {
         return null;
     }
+
+
     @Override
     public int onStartCommand(Intent intent, int flags, int startId)
     {
         Log.e(TAG, "onStartCommand");
         super.onStartCommand(intent, flags, startId);
+        home = intent.getStringExtra("alamat");
+        Log.d("ALAMAT SERVICE",home);
         return START_STICKY;
     }
     @Override

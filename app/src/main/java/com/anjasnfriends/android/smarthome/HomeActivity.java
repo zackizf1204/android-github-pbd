@@ -44,7 +44,8 @@ import java.net.URL;
 
 import static com.anjasnfriends.android.smarthome.MainActivity.userName;
 
-public class HomeActivity extends AppCompatActivity implements SensorEventListener {
+public class
+HomeActivity extends AppCompatActivity implements SensorEventListener {
     private final static String TAG = "HomeActivity";
     private final String urlPath = "https://smarthome-server-api.herokuapp.com";
     private final int PROXIMITY_NEAR = 0;
@@ -162,10 +163,10 @@ public class HomeActivity extends AppCompatActivity implements SensorEventListen
                             e.printStackTrace();
                         }
                         Toast.makeText(getApplicationContext(), "Address Updated", Toast.LENGTH_LONG).show();
-
                         stopService(new Intent(getApplicationContext(), LocationService.class));
+                        Distance.setText("Calculating..");
                         Intent locservice = new Intent(getApplicationContext(), LocationService.class);
-                        locservice.putExtra("address",address);
+                        locservice.putExtra("alamat",address);
                         startService(locservice);
                         return true;
                     }
@@ -319,9 +320,7 @@ public class HomeActivity extends AppCompatActivity implements SensorEventListen
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Intent locservice = new Intent(getApplicationContext(), LocationService.class);
-        locservice.putExtra("address",address);
-        startService(locservice);
+
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         if ((mSensorManager != null ? mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER) : null) != null) {
@@ -423,7 +422,9 @@ public class HomeActivity extends AppCompatActivity implements SensorEventListen
         mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
         mSensorManager.registerListener(this, mProximity, SensorManager.SENSOR_DELAY_NORMAL);
         registerReceiver(distanceUi, new IntentFilter("DISTANCE_UPDATED"));
-        startService(new Intent(this, LocationService.class));
+        Intent locservice = new Intent(getApplicationContext(), LocationService.class);
+        locservice.putExtra("alamat",address);
+        startService(locservice);
     }
 
     @Override
@@ -512,6 +513,9 @@ public class HomeActivity extends AppCompatActivity implements SensorEventListen
                     e.printStackTrace();
                     Log.d(TAG, "Error = " + e.getMessage());
                 }
+                Intent locservice = new Intent(getApplicationContext(), LocationService.class);
+                locservice.putExtra("alamat",address);
+                startService(locservice);
 
                 return null;
             }
