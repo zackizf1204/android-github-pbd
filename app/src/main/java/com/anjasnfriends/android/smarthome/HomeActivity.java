@@ -474,40 +474,45 @@ HomeActivity extends AppCompatActivity implements SensorEventListener {
                     respWriter.close();
 
                     JSONArray jsonArray = new JSONArray(response);
-                    if (jsonArray.length() != 0) {
-                        JSONObject responseJSON = jsonArray.getJSONObject(0);
-                        doorSwitchValue = Integer.valueOf(responseJSON.getString("door"));
-                        lamp1SwitchValue = Integer.valueOf(responseJSON.getString("lamp1"));
-                        lamp2SwitchValue = Integer.valueOf(responseJSON.getString("lamp2"));
-                        lamp3SwitchValue = Integer.valueOf(responseJSON.getString("lamp3"));
-                        alarmSwitchValue = Integer.valueOf(responseJSON.getString("alarm"));
-                        address = responseJSON.getString("address");
-                        Intent intent = new Intent(TOGGLE_SWITCH);
-                        sendBroadcast(intent);
+                    Log.d(TAG, "Panjang array JSON Response = " + jsonArray.length());
+                    if (userName != null) {
+                        if (jsonArray.length() != 0) {
+                            JSONObject responseJSON = jsonArray.getJSONObject(0);
+                            doorSwitchValue = Integer.valueOf(responseJSON.getString("door"));
+                            lamp1SwitchValue = Integer.valueOf(responseJSON.getString("lamp1"));
+                            lamp2SwitchValue = Integer.valueOf(responseJSON.getString("lamp2"));
+                            lamp3SwitchValue = Integer.valueOf(responseJSON.getString("lamp3"));
+                            alarmSwitchValue = Integer.valueOf(responseJSON.getString("alarm"));
+                            address = responseJSON.getString("address");
+                            Intent intent = new Intent(TOGGLE_SWITCH);
+                            sendBroadcast(intent);
+                        } else {
+                            urlString = urlPath + "/createNewHome";
+                            JSONObject requestJSON = new JSONObject();
+
+                            url = new URL(urlString);
+                            HttpURLConnection registConnection = (HttpURLConnection) url.openConnection();
+                            registConnection.setRequestMethod("POST");
+                            registConnection.setRequestProperty("Content-Type", "application/json");
+
+                            requestJSON.put("door", String.valueOf(doorSwitchValue));
+                            requestJSON.put("lamp1", String.valueOf(lamp1SwitchValue));
+                            requestJSON.put("lamp2", String.valueOf(lamp2SwitchValue));
+                            requestJSON.put("lamp3", String.valueOf(lamp3SwitchValue));
+                            requestJSON.put("alarm", String.valueOf(alarmSwitchValue));
+                            requestJSON.put("owner", userName);
+                            requestJSON.put("address", address);
+
+                            registConnection.setDoOutput(true);
+                            DataOutputStream outputStream = new DataOutputStream(registConnection.getOutputStream());
+                            outputStream.writeBytes(requestJSON.toString());
+                            outputStream.close();
+
+                            Log.d("TAG", "User Name = " + userName);
+                            Log.d("TAG", "POST Response Code = " + registConnection.getResponseCode());
+                        }
                     } else {
-                        urlString = urlPath + "/createNewHome";
-                        JSONObject requestJSON = new JSONObject();
-
-                        url = new URL(urlString);
-                        HttpURLConnection registConnection = (HttpURLConnection) url.openConnection();
-                        registConnection.setRequestMethod("POST");
-                        registConnection.setRequestProperty("Content-Type", "application/json");
-
-                        requestJSON.put("door", String.valueOf(doorSwitchValue));
-                        requestJSON.put("lamp1", String.valueOf(lamp1SwitchValue));
-                        requestJSON.put("lamp2", String.valueOf(lamp2SwitchValue));
-                        requestJSON.put("lamp3", String.valueOf(lamp3SwitchValue));
-                        requestJSON.put("alarm", String.valueOf(alarmSwitchValue));
-                        requestJSON.put("owner", userName);
-                        requestJSON.put("address", address);
-
-                        registConnection.setDoOutput(true);
-                        DataOutputStream outputStream = new DataOutputStream(registConnection.getOutputStream());
-                        outputStream.writeBytes(requestJSON.toString());
-                        outputStream.close();
-
-                        Log.d("TAG", "User Name = " + userName);
-                        Log.d("TAG", "POST Response Code = " + registConnection.getResponseCode());
+                        Log.d(TAG, "User Name = NULL");
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

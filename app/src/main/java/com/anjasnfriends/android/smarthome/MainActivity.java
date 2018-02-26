@@ -320,10 +320,8 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     protected void onPostExecute(JSONObject userInfo) {
                         if (userInfo != null) {
-                            String firstName = userInfo.optString("given_name", null);
-                            String lastName = userInfo.optString("family_name", null);
-                            String fullname  = firstName + lastName;
-                            userName=fullname.replaceAll(" ","");
+                            String fullname  = userInfo.optString("name", null);
+                            userName = fullname.replaceAll(" ","");
                             Log.d(MainApplication.LOG_TAG, "User name = " + userName);
                         }
                     }
