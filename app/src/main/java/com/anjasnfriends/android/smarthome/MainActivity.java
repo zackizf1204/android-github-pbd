@@ -37,7 +37,9 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.squareup.picasso.Picasso;
 
 import net.openid.appauth.AuthState;
@@ -108,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         //
+        FirebaseMessaging.getInstance().subscribeToTopic("SmartHomeAnjas");
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             requestPermissions(INITIAL_PERMS, INITIAL_REQUEST);

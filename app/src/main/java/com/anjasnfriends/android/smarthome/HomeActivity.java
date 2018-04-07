@@ -124,6 +124,18 @@ HomeActivity extends AppCompatActivity implements SensorEventListener {
             AddressBar.setText(address);
         }
     };*/
+    private BroadcastReceiver receiverNotification= new BroadcastReceiver() {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            try {
+                sendHTTPGETRequest();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    };
+
 
     private BroadcastReceiver distanceUi= new BroadcastReceiver() {
 
@@ -183,17 +195,32 @@ HomeActivity extends AppCompatActivity implements SensorEventListener {
             if (doorSwitchValue == 1) {
                 doorSwitch.setChecked(true);
             }
+            else{
+                doorSwitch.setChecked(false);
+            }
             if (lamp1SwitchValue == 1) {
                 lamp1Switch.setChecked(true);
+            }
+            else{
+                lamp1Switch.setChecked(false);
             }
             if (lamp2SwitchValue == 1) {
                 lamp2Switch.setChecked(true);
             }
+            else{
+                lamp2Switch.setChecked(false);
+            }
             if (lamp3SwitchValue == 1) {
                 lamp3Switch.setChecked(true);
             }
+            else{
+                lamp3Switch.setChecked(false);
+            }
             if (alarmSwitchValue == 1) {
                 alarmSwitch.setChecked(true);
+            }
+            else{
+                alarmSwitch.setChecked(false);
             }
         }
     };
@@ -215,6 +242,7 @@ HomeActivity extends AppCompatActivity implements SensorEventListener {
         }
 
         registerReceiver(distanceUi, new IntentFilter("DISTANCE_UPDATED"));
+        registerReceiver(receiverNotification, new IntentFilter("NOTIFICATION_FCM"));
         registerReceiver(toggleSwitch, new IntentFilter(TOGGLE_SWITCH));
         registerReceiver(addressUI, new IntentFilter("ADDRESS"));
         doorSwitch = (Switch) findViewById(R.id.door_switch);

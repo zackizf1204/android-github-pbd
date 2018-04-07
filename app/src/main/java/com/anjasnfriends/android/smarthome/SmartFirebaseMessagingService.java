@@ -32,7 +32,8 @@ public class SmartFirebaseMessagingService extends FirebaseMessagingService {
     public void onMessageReceived(RemoteMessage remoteMessage) {
 
         Log.d(TAG, "From: " + remoteMessage.getFrom());
-
+        Intent intent = new Intent("NOTIFICATION_FCM");
+        sendBroadcast(intent);
         if (remoteMessage.getNotification() != null) {
             // Display Notification
             Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
